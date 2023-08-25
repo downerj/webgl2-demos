@@ -1,0 +1,16 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  height: calc(100% - 10px);
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  background-color: black;
+  color: white;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
