@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <title>GLSL 2D Example</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="theme-color" content="#000000"/>
+    <link rel="shortcut icon" type="image/png" href="favicon.png"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"
+      integrity="sha512-zhHQR0/H5SEBL3Wn6yYSaTTZej12z0hVZKOv3TwCUXT1z5qeqGcXJLLrbERYRScEDDpYIJhPC1fk31gqR783iQ=="
+      crossorigin="anonymous" defer>
+    </script>
+    <script src="vertex-shader.js" defer></script>
+    <script src="shader-utils.js" defer></script>
+    <script src="fragment-shader.js" defer></script>
+    <script src="loop.js" defer></script>
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="styles.css"/>
+  </head>
+  <body>
+    <div class="canvas-container">
+      <canvas id="cvs" class="grab">
+        Your browser does not support the HTML Canvas API.
+      </canvas>
+    </div>
+    <!--
+    <a href="https://github.com/ascenderx/webglexamples-js-web.git">
+      <img
+        loading="lazy"
+        width="100"
+        height="100"
+        src="forkme_left_darkblue_121621.png"
+        class="github-banner"
+        alt="Fork me on GitHub"
+        data-recalc-dims="1">
+    </a>
+    -->
+  </body>
+</html>

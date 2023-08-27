@@ -1,0 +1,28 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: black;
+  color: white;
+}
+
+.center-container {
+  display: block;
+  position: absolute;
+  --width: 500px;
+  --height: 500px;
+  width: var(--width);
+  height: var(--height);
+  left: calc(50% - var(--width)/2);
+  top: calc(50% - var(--height)/2);
+}
+
+canvas {
+  border: 1px solid white;
+}
