@@ -13,7 +13,7 @@ export class Geometry {
   }
 }
 
-export class Square extends Geometry {
+export class Rectangle extends Geometry {
   #position;
 
   constructor({x = 0, y = 0, z = 0} = {}) {
@@ -40,71 +40,6 @@ export class Square extends Geometry {
       0, 1, 2,
       // Top left triangle
       0, 2, 3,
-    ]);
-  }
-}
-
-export class Cube extends Geometry {
-  /**
-   * @type {[number, number, number]}
-   */
-  #position;
-
-  /**
-   * @param {{x: number, y: number, z: number}}
-   */
-  constructor({x = 0, y = 0, z = 0} = {}) {
-    super();
-    this.#position = [x, y, z];
-  }
-
-  /**
-   * @returns {Float32Array}
-   */
-  get vertices() {
-    return new Float32Array([
-      // Front Bottom Left
-      -1, -1, -1,
-      // Front Bottom Right
-      1, -1, -1,
-      // Front Top Right
-      1, 1, -1,
-      // Front Top Left
-      -1, 1, -1,
-      // Back Bottom Left
-      -1, -1, 1,
-      // Back Bottom Right
-      1, -1, 1,
-      // Back Top Right
-      1, 1, 1,
-      // Back Top Left
-      -1, 1, 1,
-    ]);
-  }
-
-  /**
-   * @returns {Uint16Array}
-   */
-  get indices() {
-    return new Uint16Array([
-      // Front
-      0, 1, 2,
-      0, 2, 3,
-      // Right
-      1, 5, 6,
-      1, 6, 2,
-      // Bottom
-      4, 5, 1,
-      4, 1, 0,
-      // Back
-      5, 4, 7,
-      5, 7, 6,
-      // Left
-      4, 0, 3,
-      4, 3, 7,
-      // Top
-      3, 2, 6,
-      3, 6, 7,
     ]);
   }
 }

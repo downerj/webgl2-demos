@@ -1,6 +1,6 @@
 import { Graphics } from './graphics.js'
 import { AnimationTimer } from './timer.js';
-import { Square } from './geometry.js';
+import { Rectangle } from './geometry.js';
 
 class WebGL2Example {
   /**
@@ -19,7 +19,7 @@ class WebGL2Example {
    * @type {{[name: string]: Geometry}}
    */
   #geometry = {
-    square: new Square(),
+    rectangle: new Rectangle(),
   };
   
   /**
