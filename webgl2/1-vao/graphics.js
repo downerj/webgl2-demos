@@ -1,32 +1,5 @@
 import { Geometry } from "./geometry.js";
 
-/**
- * @typedef {(number | boolean | Float32Array | Float64Array | Uint16Array | Uint32Array)} UniformValue
- * @typedef {(number | boolean | Float32Array | Float64Array | Uint16Array | Uint32Array)} AttributeValue
- */
-
-// class UniformData {
-//   /**
-//    * @type {number}
-//    */
-//   location;
-//   /**
-//    * @type {UniformValue}
-//    */
-//   value;
-// }
-
-// class AttributeData {
-//   /**
-//    * @type {number}
-//    */
-//   location;
-//   /**
-//    * @type {AttributeValue}
-//    */
-//   value;
-// }
-
 class ObjectData {
   /**
    * @type {Geometry}
