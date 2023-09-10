@@ -1,0 +1,23 @@
+% Perspective projection matrix
+
+$$
+P(\phi, \rho, n, f)=
+\left[
+\begin{matrix}
+\frac{1}{\rho}\cot{\frac{\phi}{2}} & 0 & 0 & 0\\
+0 & \cot{\frac{\phi}{2}} & 0 & 0\\
+0 & 0 & \frac{n + f}{n - f} & \frac{2 n f}{n - f}\\
+0 & 0 & -1 & 0\\
+\end{matrix}
+\right]\\
+
+\lim_{f\rightarrow\infty}P(\phi, \rho, n, f)=
+\left[
+\begin{matrix}
+\frac{1}{\rho}\cot{\frac{\phi}{2}} & 0 & 0 & 0\\
+0 & \cot{\frac{\phi}{2}} & 0 & 0\\
+0 & 0 & -1 & -2n\\
+0 & 0 & -1 & 0\\
+\end{matrix}
+\right]\\
+$$
