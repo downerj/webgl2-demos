@@ -13,14 +13,17 @@ class WebGL2Example {
    * @type {HTMLCanvasElement}
    */
   #canvas;
+
   /**
    * @type {Camera}
    */
   #camera;
+
   /**
    * @type {Graphics}
    */
   #graphics;
+
   /**
    * @type {AnimationTimer}
    */
@@ -28,11 +31,16 @@ class WebGL2Example {
   /**
    * @type {Actor[]}
    */
+
   #cubeActors = [
-    new Actor({r: 255}),
-    new Actor({x: 3, g: 255}),
-    new Actor({y: 3, b: 255}),
-    new Actor({x: 3, y: 3, r: 255, g: 255}),
+    new Actor({x: -1.5, y: -1.5, z: -1.5}),
+    new Actor({x: 1.5, y: -1.5, z: -1.5}),
+    new Actor({x: -1.5, y: 1.5, z: -1.5}),
+    new Actor({x: 1.5, y: 1.5, z: -1.5}),
+    new Actor({x: -1.5, y: -1.5, z: 1.5}),
+    new Actor({x: 1.5, y: -1.5, z: 1.5}),
+    new Actor({x: -1.5, y: 1.5, z: 1.5}),
+    new Actor({x: 1.5, y: 1.5, z: 1.5}),
   ];
 
   /**
@@ -52,6 +60,8 @@ class WebGL2Example {
     right: KEY_UP,
     up: KEY_UP,
     down: KEY_UP,
+    rollLeft: KEY_UP,
+    rollRight: KEY_UP,
   };
 
   /**
@@ -67,17 +77,22 @@ class WebGL2Example {
    * @type {{pitch: number, yaw: number, roll: number}}
    */
   #lookFactor = {
-    pitch: 0.1,
-    yaw: 0.1,
-    roll: 0.1,
-  }
+    pitch: 0.05,
+    yaw: 0.05,
+    roll: 1,
+  };
+
+  /**
+   * @type {(timestamp: DOMHighResTimeStamp) => void}
+   */
+  #callback;
   
   /**
    * @param {HTMLCanvasElement} canvas
    */
   constructor(canvas) {
     this.#canvas = canvas;
-    this.#camera = new Camera({fov: 45, z: 5,});
+    this.#camera = new Camera({fovy: 45, x: 5, y: 5, z: 5, pitch: 35, yaw: 315});
     this.#graphics = new Graphics(canvas);
     this.#graphics.useCamera(this.#camera);
   }
@@ -91,26 +106,42 @@ class WebGL2Example {
    * @param {DOMHighResTimeStamp} timestamp
    */
   #tick(timestamp) {
-    this.#update();
+    this.#update(timestamp);
     this.#graphics.render(timestamp);
   }
 
-  #update() {
+  #update(timestamp) {
     if (this.#keyActions.forward === KEY_DOWN) {
-      this.#camera.walkForward(this.#walkSpeed.dz);
+      this.#camera.flyZRelative(-this.#walkSpeed.dz);
     } else if (this.#keyActions.backward === KEY_DOWN) {
-      this.#camera.walkBackward(this.#walkSpeed.dz);
+      this.#camera.flyZRelative(this.#walkSpeed.dz);
     }
     if (this.#keyActions.left === KEY_DOWN) {
-      this.#camera.walkLeft(this.#walkSpeed.dx);
+      this.#camera.flyXRelative(-this.#walkSpeed.dx);
     } else if (this.#keyActions.right === KEY_DOWN) {
-      this.#camera.walkRight(this.#walkSpeed.dx);
+      this.#camera.flyXRelative(this.#walkSpeed.dx);
     }
     if (this.#keyActions.up === KEY_DOWN) {
-      this.#camera.walkUp(this.#walkSpeed.dy);
+      this.#camera.flyYRelative(this.#walkSpeed.dy);
     } else if (this.#keyActions.down === KEY_DOWN) {
-      this.#camera.walkDown(this.#walkSpeed.dy);
+      this.#camera.flyYRelative(-this.#walkSpeed.dy);
     }
+    if (this.#keyActions.rollLeft === KEY_DOWN) {
+      this.#camera.rollLeft(-this.#lookFactor.roll);
+    } else if (this.#keyActions.rollRight === KEY_DOWN) {
+      this.#camera.rollLeft(this.#lookFactor.roll);
+    }
+
+    if (this.#callback != null) {
+      this.#callback(timestamp);
+    }
+  }
+
+  /**
+   * @param {(timestamp: DOMHighResTimeStamp) => void} callback
+   */
+  setUpdateCallback(callback) {
+    this.#callback = callback;
   }
 
   /**
@@ -118,6 +149,7 @@ class WebGL2Example {
    * @param {number} height
    */
   resize(width, height) {
+    this.#camera.resize(width, height);
     this.#graphics.resize(width, height);
   }
 
@@ -138,6 +170,10 @@ class WebGL2Example {
       return 'up';
     } else if (key === 'Shift') {
       return 'down';
+    } else if (key === 'q') {
+      return 'rollLeft';
+    } else if (key === 'e') {
+      return 'rollRight';
     }
     return null;
   }
@@ -177,9 +213,6 @@ class WebGL2Example {
    * @param {number} dy
    */
   moveMouse(dx, dy) {
-    if (document.pointerLockElement !== this.#canvas) {
-      return;
-    }
     this.#camera.yawRight(dx * this.#lookFactor.yaw);
     this.#camera.pitchUp(dy * this.#lookFactor.pitch);
   }
@@ -190,6 +223,10 @@ class WebGL2Example {
 
   pause() {
     this.#timer.suspend();
+  }
+
+  get camera() {
+    return this.#camera;
   }
 }
 
@@ -214,24 +251,54 @@ window.addEventListener('load', async () => {
     }
   });
   window.addEventListener('keydown', (event) => {
+    if (document.pointerLockElement !== canvas) {
+      return;
+    }
     example.pressKey(event.key);
   });
   window.addEventListener('keyup', (event) => {
+    if (document.pointerLockElement !== canvas) {
+      return;
+    }
     example.releaseKey(event.key);
   });
   window.addEventListener('mousemove', (event) => {
+    if (document.pointerLockElement !== canvas) {
+      return;
+    }
     example.moveMouse(event.movementX, event.movementY);
   });
   resizeCanvas(canvas);
   example.resize(canvas.width, canvas.height);
   await example.init();
+
+  const lblCameraPosition = document.getElementById('lblCameraPosition');
+  const lblCameraRotation = document.getElementById('lblCameraRotation');
+  const lblCameraAspect = document.getElementById('lblCameraAspect');
+  const lblCameraFOVY = document.getElementById('lblCameraFOVY');
+  example.setUpdateCallback((_timestamp) => {
+    const {x, y, z, pitch, yaw, roll, fovy} = example.camera;
+    const {width, height} = canvas;
+    lblCameraPosition.innerText = `(${x.toFixed(2)} / ${y.toFixed(2)} / ${z.toFixed(2)})`;
+    lblCameraRotation.innerHTML = `(${pitch.toFixed(2)}&deg; / ${yaw.toFixed(2)}&deg; / ${roll.toFixed(2)}&deg;)`;
+    lblCameraAspect.innerText = `(${width} / ${height})`;
+    lblCameraFOVY.innerText = fovy.toFixed(2);
+  });
+  const lblStatus = document.getElementById('lblStatus');
   window.addEventListener('focus', () => {
     console.log('Window in focus');
+    lblStatus.innerText = 'Running';
     example.run();
   });
   window.addEventListener('blur', () => {
     console.log('Window out of focus');
+    lblStatus.innerText = 'Paused';
     example.pause();
   });
+  const btResetCamera = document.getElementById('btResetCamera');
+  btResetCamera.addEventListener('click', () => {
+    example.camera.reset();
+  });
+  lblStatus.innerText = 'Running';
   example.run();
 });

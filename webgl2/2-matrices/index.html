@@ -19,5 +19,19 @@
   </head>
   <body>
     <canvas id="cvs">Your browser does not support the HTML5 Canvas API.</canvas>
+    <div class="info-box">
+      <ul>
+        <li>Camera:
+          <ul>
+            <li>Position (X / Y / Z): <label id="lblCameraPosition"></label></li>
+            <li>Rotation (Pitch / Yaw / Roll): <label id="lblCameraRotation"></label></li>
+            <li>Aspect Ratio (Width / Height): <label id="lblCameraAspect"></label></li>
+            <li>Field of View Y: <label id="lblCameraFOVY"></label></li>
+          </ul>
+        </li>
+        <li>Reset: <button id="btResetCamera">Reset Camera</button></li>
+        <li>Status: <label id="lblStatus"></label></li>
+      </ul>
+    </div>
   </body>
 </html>

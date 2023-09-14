@@ -261,7 +261,6 @@ export class Graphics {
    */
   resize(width, height) {
     const gl = this.#gl;
-    this.#camera.aspect = width / height;
     gl.viewport(0, 0, width, height);
   }
 
@@ -282,22 +281,13 @@ export class Graphics {
     const {program, uniforms} = this.#programs.main;
     gl.useProgram(program);
 
-    const {projection, view, model} = this.#matrices;
     if (this.#camera != null) {
-      const D2R = Math.PI / 180;
-      const {fov, aspect, near, far, x, y, z, pitch, yaw, roll} = this.#camera;
-      mat4.identity(projection);
-      mat4.perspective(projection, fov, aspect, near, far);
-      gl.uniformMatrix4fv(uniforms.projection, false, projection);
-
-      mat4.identity(view);
-      mat4.rotateX(view, view, pitch * D2R);
-      mat4.rotateY(view, view, yaw * D2R);
-      mat4.rotateZ(view, view, roll * D2R);
-      mat4.translate(view, view, [-x, -y, -z]);
-      gl.uniformMatrix4fv(uniforms.view, false, view);
+      const {projectionMatrix, viewMatrix} = this.#camera;
+      gl.uniformMatrix4fv(uniforms.projection, false, projectionMatrix);
+      gl.uniformMatrix4fv(uniforms.view, false, viewMatrix);
     }
 
+    const {model} = this.#matrices;
     for (const {actor, data} of this.#actors) {
       const {position, ax, ay, az, color} = actor;
       const {vao, ibo, geometry} = data;
