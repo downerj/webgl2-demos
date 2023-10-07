@@ -92,7 +92,7 @@ class WebGL2Example {
    */
   constructor(canvas) {
     this.#canvas = canvas;
-    this.#camera = new Camera({fovy: 45, x: 5, y: 5, z: 5, pitch: 35, yaw: 315});
+    this.#camera = new Camera({fovy: 45, z: 5});
     this.#graphics = new Graphics(canvas);
     this.#graphics.useCamera(this.#camera);
   }
@@ -240,6 +240,8 @@ window.addEventListener('load', async () => {
    * @type {HTMLCanvasElement}
    */
   const canvas = document.getElementById('cvs');
+  const mouseCanvas = document.getElementById('cvsMouse');
+  const ctxMouse = mouseCanvas.getContext('2d');
   const example = new WebGL2Example(canvas);
   window.addEventListener('resize', () => {
     resizeCanvas(canvas);
@@ -262,25 +264,37 @@ window.addEventListener('load', async () => {
     }
     example.releaseKey(event.key);
   });
+  function clamp(x, min, max) {
+    return Math.min(Math.max(x, min), max);
+  }
   window.addEventListener('mousemove', (event) => {
     if (document.pointerLockElement !== canvas) {
       return;
     }
-    example.moveMouse(event.movementX, event.movementY);
+    const {movementX, movementY} = event;
+    example.moveMouse(movementX, movementY);
+    
+    ctxMouse.clearRect(0, 0, mouseCanvas.width, mouseCanvas.height);
+    ctxMouse.fillStyle = '#ff0';
+    const halfWidth = mouseCanvas.width * 0.5;
+    const halfHeight = mouseCanvas.height * 0.5;
+    const posX = clamp(halfWidth + movementX, 0, mouseCanvas.width);
+    const posY = clamp(halfHeight + movementY, 0, mouseCanvas.height);
+    ctxMouse.fillRect(posX - 5, posY - 5, 5, 5);
   });
   resizeCanvas(canvas);
   example.resize(canvas.width, canvas.height);
   await example.init();
 
   const lblCameraPosition = document.getElementById('lblCameraPosition');
-  const lblCameraRotation = document.getElementById('lblCameraRotation');
+  // const lblCameraRotation = document.getElementById('lblCameraRotation');
   const lblCameraAspect = document.getElementById('lblCameraAspect');
   const lblCameraFOVY = document.getElementById('lblCameraFOVY');
   example.setUpdateCallback((_timestamp) => {
-    const {x, y, z, pitch, yaw, roll, fovy} = example.camera;
+    const {x, y, z, fovy} = example.camera;
     const {width, height} = canvas;
     lblCameraPosition.innerText = `(${x.toFixed(2)} / ${y.toFixed(2)} / ${z.toFixed(2)})`;
-    lblCameraRotation.innerHTML = `(${pitch.toFixed(2)}&deg; / ${yaw.toFixed(2)}&deg; / ${roll.toFixed(2)}&deg;)`;
+    // lblCameraRotation.innerHTML = `(${pitch.toFixed(2)}&deg; / ${yaw.toFixed(2)}&deg; / ${roll.toFixed(2)}&deg;)`;
     lblCameraAspect.innerText = `(${width} / ${height})`;
     lblCameraFOVY.innerText = fovy.toFixed(2);
   });

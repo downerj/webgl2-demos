@@ -1,18 +1,12 @@
 const { cos, sin, PI } = Math;
 const D2R = PI / 180;
-const { mat4, vec4 } = glMatrix;
+const { mat3, mat4, vec3, vec4 } = glMatrix;
 
 export class Camera {
   #fovy;
   #aspect;
   #near;
   #far;
-  #x;
-  #y;
-  #z;
-  #pitch;
-  #yaw;
-  #roll;
 
   #initFovy;
   #initNear;
@@ -24,6 +18,12 @@ export class Camera {
   #initYaw;
   #initRoll;
 
+  #origin = vec4.create();
+  #position = vec4.create();
+  #rightVec = vec4.create();
+  #upVec = vec4.create();
+  #lookVec = vec4.create();
+  #workingMat = mat4.create();
   #projectionMatrix = mat4.create();
   #viewMatrix = mat4.create();
 
@@ -61,19 +61,7 @@ export class Camera {
     this.#initYaw = yaw;
     this.#initRoll = roll;
 
-    this.#fovy = fovy;
-    this.#aspect = aspect;
-    this.#near = near;
-    this.#far = far;
-    this.#x = x;
-    this.#y = y;
-    this.#z = z;
-    this.#pitch = pitch;
-    this.#yaw = yaw;
-    this.#roll = roll;
-
-    this.#updateProjectionMatrix();
-    this.#updateViewMatrix();
+    this.reset();
   }
 
   #updateProjectionMatrix() {
@@ -82,11 +70,8 @@ export class Camera {
   }
 
   #updateViewMatrix() {
-    mat4.identity(this.#viewMatrix);
-    mat4.rotateX(this.#viewMatrix, this.#viewMatrix, this.#pitch * D2R);
-    mat4.rotateY(this.#viewMatrix, this.#viewMatrix, this.#yaw * D2R);
-    mat4.rotateZ(this.#viewMatrix, this.#viewMatrix, this.#roll * D2R);
-    mat4.translate(this.#viewMatrix, this.#viewMatrix, [-this.#x, -this.#y, -this.#z]);
+    mat4.lookAt(this.#viewMatrix, this.#origin, this.#lookVec, this.#upVec);
+    mat4.translate(this.#viewMatrix, this.#viewMatrix, this.#position);
   }
 
   get fovy() {
@@ -105,28 +90,20 @@ export class Camera {
     return this.#far;
   }
 
+  get position() {
+    return this.#position;
+  }
+
   get x() {
-    return this.#x;
+    return this.#position[0];
   }
 
   get y() {
-    return this.#y;
+    return this.#position[1];
   }
 
   get z() {
-    return this.#z;
-  }
-
-  get pitch() {
-    return this.#pitch;
-  }
-
-  get yaw() {
-    return this.#yaw;
-  }
-
-  get roll() {
-    return this.#roll;
+    return this.#position[2];
   }
 
   get projectionMatrix() {
@@ -141,14 +118,16 @@ export class Camera {
     this.#fovy = this.#initFovy;
     this.#near = this.#initNear;
     this.#far = this.#initFar;
-    this.#x = this.#initX;
-    this.#y = this.#initY;
-    this.#z = this.#initZ;
-    this.#pitch = this.#initPitch;
-    this.#yaw = this.#initYaw;
-    this.#roll = this.#initRoll;
-
     this.#updateProjectionMatrix();
+    
+    vec4.set(this.#rightVec, 1, 0, 0, 1);
+    vec4.set(this.#upVec, 0, 1, 0, 1);
+    vec4.set(this.#lookVec, 0, 0, 1, 1);
+    this.#doPitch(this.#initPitch);
+    this.#doYaw(this.#initYaw);
+    this.#doRoll(this.#initRoll);
+    vec4.set(this.#position, this.#initX, this.#initY, this.#initZ, 1);
+    mat4.identity(this.#viewMatrix);
     this.#updateViewMatrix();
   }
 
@@ -158,98 +137,111 @@ export class Camera {
   }
 
   walkXRelative(dx) {
-    const c = cos(this.#yaw * D2R);
-    const s = sin(this.#yaw * D2R);
-    this.#x += dx * c;
-    this.#z += dx * s;
-    this.#updateViewMatrix();
+    // const c = cos(this.#yaw * D2R);
+    // const s = sin(this.#yaw * D2R);
+    // this.#x += dx * c;
+    // this.#z += dx * s;
+    // this.#updateViewMatrix();
   }
 
   walkYRelative(dy) {
-    this.#y += dy;
-    this.#updateViewMatrix();
+    // this.#y += dy;
+    // this.#updateViewMatrix();
   }
 
   walkZRelative(dz) {
-    const c = cos(this.#yaw * D2R);
-    const s = sin(this.#yaw * D2R);
-    this.#x -= dz * s;
-    this.#z += dz * c;
-    this.#updateViewMatrix();
+    // const c = cos(this.#yaw * D2R);
+    // const s = sin(this.#yaw * D2R);
+    // this.#x -= dz * s;
+    // this.#z += dz * c;
+    // this.#updateViewMatrix();
   }
 
   walkLeft(dx) {
     this.walkXRelative(-dx);
-    this.#updateViewMatrix();
   }
 
   walkRight(dx) {
     this.walkXRelative(dx);
-    this.#updateViewMatrix();
   }
 
   walkForward(dz) {
     this.walkZRelative(-dz);
-    this.#updateViewMatrix();
   }
 
   walkBackward(dz) {
     this.walkZRelative(dz);
-    this.#updateViewMatrix();
   }
 
   walkUp(dy) {
     this.walkYRelative(dy);
-    this.#updateViewMatrix();
   }
 
   walkDown(dy) {
     this.walkYRelative(-dy);
-    this.#updateViewMatrix();
   }
 
   flyXRelative(dx) {
-    const dr = vec4.create();
-    dr[0] = dx;
-    const m = mat4.create();
-    mat4.invert(m, this.#viewMatrix);
-    vec4.transformMat4(dr, dr, m);
-    this.#x += dr[0];
-    this.#y += dr[1];
-    this.#z += dr[2];
-    this.#updateViewMatrix();
+    // const dr = vec4.create();
+    // dr[0] = dx;
+    // const m = mat4.create();
+    // mat4.invert(m, this.#viewMatrix);
+    // vec4.transformMat4(dr, dr, m);
+    // this.#x += dr[0];
+    // this.#y += dr[1];
+    // this.#z += dr[2];
+    // this.#updateViewMatrix();
   }
 
   flyYRelative(dy) {
-    const dr = vec4.create();
-    dr[1] = dy;
-    const m = mat4.create();
-    mat4.invert(m, this.#viewMatrix);
-    vec4.transformMat4(dr, dr, m);
-    this.#x += dr[0];
-    this.#y += dr[1];
-    this.#z += dr[2];
-    this.#updateViewMatrix();
+    // const dr = vec4.create();
+    // dr[1] = dy;
+    // const m = mat4.create();
+    // mat4.invert(m, this.#viewMatrix);
+    // vec4.transformMat4(dr, dr, m);
+    // this.#x += dr[0];
+    // this.#y += dr[1];
+    // this.#z += dr[2];
+    // this.#updateViewMatrix();
   }
 
   flyZRelative(dz) {
-    const dr = vec4.create();
-    dr[2] = dz;
-    const m = mat4.create();
-    mat4.invert(m, this.#viewMatrix);
-    vec4.transformMat4(dr, dr, m);
-    this.#x += dr[0];
-    this.#y += dr[1];
-    this.#z += dr[2];
-    this.#updateViewMatrix();
+    // const dr = vec4.create();
+    // dr[2] = dz;
+    // const m = mat4.create();
+    // mat4.invert(m, this.#viewMatrix);
+    // vec4.transformMat4(dr, dr, m);
+    // this.#x += dr[0];
+    // this.#y += dr[1];
+    // this.#z += dr[2];
+    // this.#updateViewMatrix();
+  }
+
+  #doPitch(degrees) {
+    mat4.fromRotation(this.#workingMat, degrees * D2R, this.#rightVec);
+    vec4.transformMat4(this.#upVec, this.#upVec, this.#workingMat);
+    vec4.transformMat4(this.#lookVec, this.#lookVec, this.#workingMat);
+  }
+
+  #doYaw(degrees) {
+    mat4.fromRotation(this.#workingMat, -degrees * D2R, this.#upVec);
+    vec4.transformMat4(this.#rightVec, this.#rightVec, this.#workingMat);
+    vec4.transformMat4(this.#lookVec, this.#lookVec, this.#workingMat);
+  }
+
+  #doRoll(degrees) {
+    mat4.fromRotation(this.#workingMat, degrees * D2R, this.#lookVec);
+    vec4.transformMat4(this.#rightVec, this.#rightVec, this.#workingMat);
+    vec4.transformMat4(this.#upVec, this.#upVec, this.#workingMat);
   }
 
   pitchUp(degrees) {
-    this.#pitch += degrees;
-    this.#pitch %= 360;
-    while (this.#pitch < 0) {
-      this.#pitch += 360;
-    }
+    this.#doPitch(degrees);
+    // this.#pitch += degrees;
+    // this.#pitch %= 360;
+    // while (this.#pitch < 0) {
+    //   this.#pitch += 360;
+    // }
     // if (this.#pitch >= 90) {
     //   this.#pitch = 90;
     // } else if (this.#pitch <= -90) {
@@ -259,20 +251,22 @@ export class Camera {
   }
   
   yawRight(degrees) {
-    this.#yaw += degrees;
-    this.#yaw %= 360;
-    while (this.#yaw < 0) {
-      this.#yaw += 360;
-    }
+    this.#doYaw(degrees);
+    // this.#yaw += degrees;
+    // this.#yaw %= 360;
+    // while (this.#yaw < 0) {
+    //   this.#yaw += 360;
+    // }
     this.#updateViewMatrix();
   }
   
   rollLeft(degrees) {
-    this.#roll += degrees;
-    this.#roll %= 360;
-    while (this.#roll < 0) {
-      this.#roll += 360;
-    }
+    this.#doRoll(degrees);
+    // this.#roll += degrees;
+    // this.#roll %= 360;
+    // while (this.#roll < 0) {
+    //   this.#roll += 360;
+    // }
     this.#updateViewMatrix();
   }
 }

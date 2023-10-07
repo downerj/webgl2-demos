@@ -15,7 +15,10 @@ body {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-canvas {
+canvas#cvs {
+  position: fixed;
+  left: 0;
+  top: 0;
   z-index: 1;
 }
 
@@ -29,4 +32,12 @@ canvas {
   top: 0;
   z-index: 2;
   overflow: auto;
+}
+
+canvas#cvsMouse {
+  background-color: rgba(0, 0, 0, 60%);
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 2;
 }
