@@ -1,0 +1,43 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: calc(100% - 10px);
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  font-family: Verdana, sans-serif;
+  background-color: white;
+  color: black;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: black;
+    color: white;
+  }
+}
+
+:root {
+  --cvs-border: 1px;
+}
+
+div.drawing-area {
+  width: calc(100% - var(--cvs-border)*2);
+  height: calc(100% - var(--cvs-border)*2);
+}
+
+canvas {
+  border-width: var(--cvs-border);
+  border-style: solid;
+  border-color: black;
+}
+
+@media (prefers-color-scheme: dark) {
+  canvas {
+    border-color: white;
+  }
+}
