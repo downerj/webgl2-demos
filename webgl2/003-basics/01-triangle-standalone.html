@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <meta name="theme-color" content="#000000"/>
+    <link rel="shortcut icon" href="data:image/png;base64,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"/>
+    <style>
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: calc(100% - 10px);
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  font-family: Verdana, sans-serif;
+  background-color: white;
+  color: black;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: black;
+    color: white;
+  }
+}
+
+:root {
+  --cvs-border: 1px;
+}
+
+div.drawing-area {
+  width: calc(100% - var(--cvs-border)*2);
+  height: calc(100% - var(--cvs-border)*2);
+}
+
+canvas {
+  border-width: var(--cvs-border);
+  border-style: solid;
+  border-color: black;
+}
+
+@media (prefers-color-scheme: dark) {
+  canvas {
+    border-color: white;
+  }
+}
+    </style>
+    <title>WebGL2 Triangle</title>
+  </head>
+  <body>
+    <div class="drawing-area">
+      <canvas id="cvs"></canvas>
+    </div>
+    <script>
+const vertexSource = `
+#version 300 es
+
+#if __VERSION__ > 130
+#define attribute in
+#define varying out
+#endif // __VERSION__
+
+const vec3 points[3] = vec3[3](
+  vec3(0., 1., 0.),
+  vec3(-1., -1., 0.),
+  vec3(1., -1., 0.)
+);
+
+const vec3 colors[3] = vec3[3](
+  vec3(1., 0., 0.),
+  vec3(0., 1., 0.),
+  vec3(0., 0., 1.)
+);
+
+varying vec3 vVertexColor;
+
+void main(void) {
+  gl_Position = vec4(points[gl_VertexID], 1.);
+  vVertexColor = colors[gl_VertexID];
+}
+`.trim();
+
+const fragmentSource = `
+#version 300 es
+
+// Boilerplate code.
+
+#ifdef GL_ES
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif // GL_FRAGMENT_PRECISION_HIGH
+#endif // GL_ES
+
+#if __VERSION__ <= 130
+#define oFragColor gl_FragColor
+#else
+out vec4 oFragColor;
+#endif // __VERSION__
+
+#if __VERSION__ > 130
+#define varying in
+#endif // __VERSION__
+
+varying vec3 vVertexColor;
+
+void setColor(const in vec4, out vec4);
+
+void main(void) {
+  setColor(gl_FragCoord, oFragColor);
+}
+
+// Custom code.
+
+void setColor(const in vec4 fragCoord, out vec4 fragColor) {
+  fragColor = 1. - vec4(vVertexColor, 1.);
+}
+`.trim();
+
+class AnimationLoop {
+  /**
+   * @type {(timestamp: DOMHighResTimeStamp) => void}
+   */
+  #callback;
+  /**
+   * @type {number}
+   */
+  #interval;
+  #previous = 0;
+  /**
+   * @type {number?}
+   */
+  #handle;
+
+  /**
+   * @param {(timestamp: DOMHighResTimeStamp) => void} callback
+   * @param {number} interval
+   */
+  constructor(callback, interval) {
+    if (typeof callback !== 'function') {
+      throw 'Callback argument must be a function';
+    }
+    if (typeof interval !== 'number') {
+      throw 'Interval argument must be a number';
+    }
+    this.#callback = callback;
+    this.#interval = interval;
+  }
+
+  /**
+   *
+   */
+  resume() {
+    if (this.#handle != null) {
+      return;
+    }
+    this.#update();
+  }
+
+  /**
+   *
+   */
+  suspend() {
+    if (this.#handle == null) {
+      return;
+    }
+    this.#clear();
+  }
+
+  /**
+   *
+   */
+  #update() {
+    this.#handle = requestAnimationFrame(this.#onTick.bind(this));
+  }
+
+  /**
+   *
+   */
+  #clear() {
+    cancelAnimationFrame(this.#handle);
+    this.#handle = null;
+  }
+
+  /**
+   * @param {DOMHighResTimeStamp} timestamp
+   */
+  #onTick(timestamp) {
+    if (timestamp - this.#previous >= this.#interval) {
+      this.#previous = timestamp;
+      this.#callback();
+    }
+    this.#update();
+  }
+}
+
+/**
+ * @param {number} ms
+ * @returns {Promise<void>}
+ */
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+class GraphicsEngine3D {
+  /**
+   * @type {WebGL2RenderingContext}
+   */
+  #gl;
+  #bgColor = [0, .5, 1];
+  #isInitialized = false;
+  /**
+   * @type {WebGLProgram}
+   */
+  #programMain;
+
+  /**
+   * @param {HTMLCanvasElement} canvas
+   */
+  constructor(canvas) {
+    this.#gl = canvas.getContext('webgl2');
+    if (!this.#gl) {
+      throw 'Unable to get WebGL2 context';
+    }
+  }
+
+  /**
+   *
+   */
+  initialize() {
+    const program = this.#createProgram(vertexSource, fragmentSource);
+    if (!program) {
+      throw 'Failed to create program';
+    }
+    this.#programMain = program;
+    this.#isInitialized = true;
+  }
+
+  /**
+   * @param {string} vertexSource
+   * @param {string} fragmentSource
+   * @returns {WebGLProgram}
+   */
+  #createProgram(vertexSource, fragmentSource) {
+    const gl = this.#gl;
+    const shaderV = this.#createShader(vertexSource, gl.VERTEX_SHADER);
+    const shaderF = this.#createShader(fragmentSource, gl.FRAGMENT_SHADER);
+    const program = gl.createProgram();
+    gl.attachShader(program, shaderV);
+    gl.attachShader(program, shaderF);
+    gl.linkProgram(program);
+    const status = gl.getProgramParameter(program, gl.LINK_STATUS);
+    if (!status) {
+      const logP = gl.getProgramInfoLog(program);
+      const logV = gl.getShaderInfoLog(shaderV);
+      const logF = gl.getShaderInfoLog(shaderF);
+      console.error('Error linking program:', logP);
+      if (logV) {
+        console.error('Vertex shader log:', logV);
+      }
+      if (logF) {
+        console.error('Fragment shader log:', logF);
+      }
+    }
+    gl.detachShader(program, shaderV);
+    gl.detachShader(program, shaderF);
+    gl.deleteShader(shaderV);
+    gl.deleteShader(shaderF);
+    return status ? program : null;
+  }
+
+  /**
+   * @param {string} source
+   * @param {GLenum} type
+   */
+  #createShader(source, type) {
+    const gl = this.#gl;
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    return shader;
+  }
+
+  /**
+   * @returns {boolean}
+   */
+  get isInitialized() {
+    return this.#isInitialized;
+  }
+
+  /**
+   * @param {number} width
+   * @param {number} height
+   */
+  resizeToFit() {
+    const gl = this.#gl;
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+  }
+
+  /**
+   * @param {DOMHighResTimeStamp} timestamp
+   */
+  update(timestamp) {}
+
+  /**
+   *
+   */
+  render() {
+    const gl = this.#gl;
+    {
+      const [r, g, b] = this.#bgColor;
+      gl.clearColor(r, g, b, 1);
+    }
+    gl.enable(gl.DEPTH_TEST);
+    gl.clearDepth(1);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    const program = this.#programMain;
+    gl.useProgram(program);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+  }
+}
+
+class Application {
+  /**
+   * @type {HTMLCanvasElement}
+   */
+  #canvas;
+  /**
+   * @type {GraphicsEngine3D}
+   */
+  #g3d;
+  /**
+   * @type {AnimationLoop}
+   */
+  #loop;
+
+  /**
+   * @param {HTMLCanvasElement} canvas
+   */
+  constructor(canvas) {
+    this.#canvas = canvas;
+    this.#g3d = new GraphicsEngine3D(canvas);
+    this.resizeToFit();
+    try {
+      this.#g3d.initialize();
+    } catch (e) {
+      console.error('Failed to initialize WebGL2:', e);
+      throw e;
+    }
+    this.#loop = new AnimationLoop(this.#onTick.bind(this), 30);
+  }
+
+  /**
+   *
+   */
+  run() {
+    this.#loop.resume();
+  }
+
+  /**
+   *
+   */
+  resizeToFit() {
+    const canvas = this.#canvas;
+    canvas.width = canvas.parentElement.clientWidth;
+    canvas.height = canvas.parentElement.clientHeight;
+    this.#g3d.resizeToFit();
+  }
+
+  /**
+   * @param {DOMHighResTimeStamp} timestamp
+   */
+  #onTick(timestamp) {
+    this.#g3d.update(timestamp);
+    this.#g3d.render();
+  }
+}
+
+window.addEventListener('load', () => {
+  /**
+   * @type {HTMLCanvasElement}
+   */
+  const cvs = document.getElementById('cvs');
+  const app = new Application(cvs);
+
+  window.addEventListener('resize', () => {
+    app.resizeToFit();
+  });
+
+  app.run();
+});
+    </script>
+  </body>
+</html>
